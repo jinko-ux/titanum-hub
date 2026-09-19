@@ -339,7 +339,7 @@ FruitDespawnBtn.MouseButton1Click:Connect(function()
     Titanum.espFruitDespawn = not Titanum.espFruitDespawn
     if Titanum.espFruitDespawn then FruitDespawnBtn.Text = "despawn notification: ON" else FruitDespawnBtn.Text = "despawn notification: OFF" end
 end)
--- [[ TITANUM HUB: PART 4.1 - PHYSIC CORES & MASTER INP KEYBINDS ]] --
+-- [[ TITANUM HUB: PART 4.1 - PHYSIC CORES & INPUT ENGINE FIX ]] --
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -489,7 +489,13 @@ inputConnection = UIS.InputBegan:Connect(function(input, gameProcessed)
         return
     end
 end)
--- [[ TITANUM HUB: PART 4.2 - ESP RENDERING, NOTIFICATIONS & TOTAL UNLOAD ]] --
+-- [[ TITANUM HUB: PART 4.2 - ESP RENDERING & TOTAL CLEAN UNLOAD ]] --
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local player = Players.LocalPlayer
+local Titanum = shared.TitanumConfig
+
 Titanum.espConn = RunService.RenderStepped:Connect(function()
     if Titanum.isUnloaded then return end
     for _, v in pairs(Players:GetPlayers()) do
@@ -599,6 +605,6 @@ end
 Titanum.UnloadBtnObj.MouseButton1Click:Connect(masterUnload)
 Titanum.SpeedBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isSpeed then Titanum.disableSpeedFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Speedhack: DISABLED", Duration = 1.5}) end) else Titanum.enableSpeedFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Speedhack: ENABLED", Duration = 1.5}) end) end end)
 Titanum.JumpBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isJump then Titanum.disableJumpFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Super Jump: DISABLED", Duration = 1.5}) end) else Titanum.enableJumpFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Super Jump: ENABLED", Duration = 1.5}) end) end end)
-Titanum.NoclipBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isNoclip then Titanum.disableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: DISABLED", Duration = 1.5}) end) else Titanum.enableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: ENABLED", Duration = 1.5}) end) end end)
+Titanum.NoclipBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isNoclip then Titanum.disableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: ВЫКЛЮЧЕН", Duration = 1.5}) end) else Titanum.enableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: ВКЛЮЧЕН", Duration = 1.5}) end) end end)
 Titanum.BindBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end Titanum.isBinding = true Titanum.BindBtnObj.Text, Titanum.BindStrokeObj.Color = "Press any key...", Color3.fromRGB(255, 255, 0) end)
 player.CharacterAdding:Connect(function() Titanum.disableSpeedFunc() Titanum.disableJumpFunc() Titanum.disableNoclipFunc() end)
