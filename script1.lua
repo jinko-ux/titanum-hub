@@ -122,6 +122,22 @@ local function fadeGUI(targetTransparency, duration)
 end
 Titanum.fadeGUIFunc = fadeGUI
 
+task.spawn(function()
+    local tInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tTextInfo = TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    TweenService:Create(IntroOverlay, tInfo, {BackgroundTransparency = 0.45}):Play()
+    TweenService:Create(IntroTextFront, tTextInfo, {TextTransparency = 0}):Play()
+    TweenService:Create(IntroText3D, tTextInfo, {TextTransparency = 0}):Play()
+    task.wait(5)
+    TweenService:Create(IntroTextFront, tInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(IntroText3D, tInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(IntroOverlay, tInfo, {BackgroundTransparency = 1}):Play()
+    task.wait(0.6)
+    MainFrame.Visible = true
+    fadeGUI(0, 0.4)
+    IntroOverlay:Destroy()
+end)
+
 local function switchTab(activePage, activeBtn)
     if Titanum.isUnloaded then return end
     MainPage.Visible, EspPage.Visible, SettingsPage.Visible = false, false, false
@@ -235,7 +251,7 @@ UnloadBtn.BackgroundColor3, UnloadBtn.Font = Color3.fromRGB(45, 15, 15), Enum.Fo
 UnloadBtn.Text, UnloadBtn.TextColor3, UnloadBtn.TextSize = "Unload Hub Script", Color3.fromRGB(255, 100, 100), 13
 local UnloadStroke = Instance.new("UIStroke", UnloadBtn) UnloadStroke.Color = Color3.fromRGB(150, 0, 0)
 Titanum.UnloadBtnObj = UnloadBtn
--- [[ TITANUM HUB: PART 3 - ESP PAGE WITH DROPDOWNS & LVL TOGGLE ]] --
+-- [[ TITANUM HUB: PART 3 - ESP PAGE WITH DROPDOWNS ONLY ]] --
 local Titanum = shared.TitanumConfig
 local EspPage = Titanum.MainFrameObj.EspPage
 local TweenService = game:GetService("TweenService")
@@ -256,24 +272,19 @@ PlrToggleBtn.Text = "  esp player  ▼"
 PlrToggleBtn.TextColor3, PlrToggleBtn.TextSize = Color3.fromRGB(255, 255, 255), 13
 
 local PlrNameBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrNameBtn.Size, PlrNameBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 35)
+PlrNameBtn.Size, PlrNameBtn.Position = UDim2.new(1, -16, 0, 24), UDim2.new(0, 8, 0, 38)
 PlrNameBtn.BackgroundColor3, PlrNameBtn.Text = Color3.fromRGB(28, 28, 38), "esp name: OFF"
 PlrNameBtn.TextColor3, PlrNameBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
 local PlrDistBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrDistBtn.Size, PlrDistBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 62)
+PlrDistBtn.Size, PlrDistBtn.Position = UDim2.new(1, -16, 0, 24), UDim2.new(0, 8, 0, 68)
 PlrDistBtn.BackgroundColor3, PlrDistBtn.Text = Color3.fromRGB(28, 28, 38), "esp distance: OFF"
 PlrDistBtn.TextColor3, PlrDistBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
 local PlrOutlineBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrOutlineBtn.Size, PlrOutlineBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 89)
+PlrOutlineBtn.Size, PlrOutlineBtn.Position = UDim2.new(1, -16, 0, 24), UDim2.new(0, 8, 0, 98)
 PlrOutlineBtn.BackgroundColor3, PlrOutlineBtn.Text = Color3.fromRGB(28, 28, 38), "outline: OFF"
 PlrOutlineBtn.TextColor3, PlrOutlineBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
-
-local PlrLvlBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrLvlBtn.Size, PlrLvlBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 116)
-PlrLvlBtn.BackgroundColor3, PlrLvlBtn.Text = Color3.fromRGB(28, 28, 38), "esp level: OFF"
-PlrLvlBtn.TextColor3, PlrLvlBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
 local isFruitOpen = false
 local FruitDropdownFrame = Instance.new("Frame", EspPage)
@@ -312,17 +323,17 @@ local isPlrOpenLocal = false
 local function collapseEspLayout()
     local pFrame = Titanum.PlrDropdownFrameObj
     if isPlrOpenLocal then
-        TweenService:Create(pFrame, tInfo, {Size = UDim2.new(1, -20, 0, 146)}):Play()
-        TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, 166)}):Play()
+        TweenService:Create(pFrame, tInfo, {Size = UDim2.new(1, -20, 0, 132)}):Play()
+        TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, 152)}):Play()
     else
         TweenService:Create(pFrame, tInfo, {Size = UDim2.new(1, -20, 0, 30)}):Play()
         TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, 50)}):Play()
     end
     if isFruitOpen then
-        local targetY = isPlrOpenLocal and 166 or 50
+        local targetY = isPlrOpenLocal and 152 or 50
         TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, targetY), Size = UDim2.new(1, -20, 0, 162)}):Play()
     else
-        local targetY = isPlrOpenLocal and 166 or 50
+        local targetY = isPlrOpenLocal and 152 or 50
         TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, targetY), Size = UDim2.new(1, -20, 0, 30)}):Play()
     end
 end
@@ -333,7 +344,6 @@ FruitToggleBtn.MouseButton1Click:Connect(function() isFruitOpen = not isFruitOpe
 PlrNameBtn.MouseButton1Click:Connect(function() Titanum.espPlrName = not Titanum.espPlrName if Titanum.espPlrName then PlrNameBtn.Text = "esp name: ON" else PlrNameBtn.Text = "esp name: OFF" end end)
 PlrDistBtn.MouseButton1Click:Connect(function() Titanum.espPlrDist = not Titanum.espPlrDist if Titanum.espPlrDist then PlrDistBtn.Text = "esp distance: ON" else PlrDistBtn.Text = "esp distance: OFF" end end)
 PlrOutlineBtn.MouseButton1Click:Connect(function() Titanum.espPlrOutline = not Titanum.espPlrOutline if Titanum.espPlrOutline then PlrOutlineBtn.Text = "outline: ON" else PlrOutlineBtn.Text = "outline: OFF" end end)
-PlrLvlBtn.MouseButton1Click:Connect(function() Titanum.espPlrLvl = not Titanum.espPlrLvl if Titanum.espPlrLvl then PlrLvlBtn.Text = "esp level: ON" else PlrLvlBtn.Text = "esp level: OFF" end end)
 
 FruitNameBtn.MouseButton1Click:Connect(function() Titanum.espFruitName = not Titanum.espFruitName if Titanum.espFruitName then FruitNameBtn.Text = "esp name: ON" else FruitNameBtn.Text = "esp name: OFF" end end)
 FruitDistBtn.MouseButton1Click:Connect(function() Titanum.espFruitDist = not Titanum.espFruitDist if Titanum.espFruitDist then FruitDistBtn.Text = "esp distance: ON" else FruitDistBtn.Text = "esp distance: OFF" end end)
@@ -348,7 +358,7 @@ FruitDespawnBtn.MouseButton1Click:Connect(function()
     if Titanum.espFruitDespawn then FruitDespawnBtn.Text = "despawn notification: ON" else FruitDespawnBtn.Text = "despawn notification: OFF" end
 end)
 Titanum.PlrToggleBtnObj = PlrToggleBtn
--- [[ TITANUM HUB: PART 4.1 - PHYSIC ENGINE & KEYBINDS CORES ]] --
+-- [[ TITANUM HUB: PART 4.1 - PHYSIC CORES & INPUT ENGINE ]] --
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -521,7 +531,7 @@ Titanum.espConn = RunService.RenderStepped:Connect(function()
                 if highlight then highlight:Destroy() end
             end
             local billboard = head and head:FindFirstChild("TitanumESP")
-            if head and (Titanum.espPlrName or Titanum.espPlrDist or Titanum.espPlrLvl) then
+            if head and (Titanum.espPlrName or Titanum.espPlrDist) then
                 if not billboard then
                     billboard = Instance.new("BillboardGui", head)
                     billboard.Name, billboard.AlwaysOnTop, billboard.Size = "TitanumESP", true, UDim2.new(0, 200, 0, 50)
@@ -530,12 +540,9 @@ Titanum.espConn = RunService.RenderStepped:Connect(function()
                     textLabel.Size, textLabel.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
                     textLabel.TextColor3, textLabel.Font, textLabel.TextSize = Color3.fromRGB(255, 255, 255), Enum.Font.SourceSansBold, 14
                 end
-                
-                local lvlVal = v:FindFirstChild("DataFolder") and v.DataFolder:FindFirstChild("Level") and v.DataFolder.Level.Value or v:FindFirstChild("leaderstats") and v.leaderstats:FindFirstChild("Level") and v.leaderstats.Level.Value or "???"
                 local dist = math.round((v.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
                 local textStr = ""
                 if Titanum.espPlrName then textStr = textStr .. v.Name .. " " end
-                if Titanum.espPlrLvl then textStr = textStr .. "[Lvl " .. tostring(lvlVal) ..] " end
                 if Titanum.espPlrDist then textStr = textStr .. "[" .. tostring(dist) .. "m]" end
                 billboard.TextLabel.Text = textStr
             else
