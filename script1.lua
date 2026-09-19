@@ -1,4 +1,4 @@
--- [[ TITANUM HUB: PART 1 - BASE INTERFACE & ENGLISH SETUP ]] --
+-- [[ TITANUM HUB: PART 1 - BASE INTERFACE & CLEANER SETUP ]] --
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -66,7 +66,7 @@ local Sidebar = Instance.new("Frame", MainFrame)
 Sidebar.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
 Sidebar.Position, Sidebar.Size, Sidebar.BackgroundTransparency = UDim2.new(0, 0, 0, 30), UDim2.new(0, 100, 1, -30), 1
 
-local MainPage = Instance.new("ScrollingFrame", MainFrame) -- MainPage теперь ScrollingFrame для плавного скролла выпадающих плашек
+local MainPage = Instance.new("ScrollingFrame", MainFrame)
 MainPage.Name = "MainPage"
 MainPage.BackgroundTransparency, MainPage.Position, MainPage.Size = 1, UDim2.new(0, 100, 0, 30), UDim2.new(1, -100, 1, -30)
 MainPage.CanvasSize, MainPage.ScrollBarThickness, MainPage.Visible = UDim2.new(0, 0, 0, 250), 0, true
@@ -191,7 +191,6 @@ JumpGuideLabel.Size, JumpGuideLabel.Position = UDim2.new(1, -16, 0, 20), UDim2.n
 JumpGuideLabel.BackgroundTransparency, JumpGuideLabel.Font = 1, Enum.Font.SourceSansSemibold
 JumpGuideLabel.Text, JumpGuideLabel.TextColor3, JumpGuideLabel.TextSize = "[L] - increase jump  /  [P] - decrease jump", Color3.fromRGB(140, 140, 150), 11
 
--- Одиночная кнопка Ноклипа (идёт следом за списками)
 local NoclipBtn = Instance.new("TextButton", MainPage)
 NoclipBtn.Size, NoclipBtn.Position = UDim2.new(1, -20, 0, 32), UDim2.new(0, 10, 0, 90)
 NoclipBtn.BackgroundColor3, NoclipBtn.Font = Color3.fromRGB(20, 20, 30), Enum.Font.SourceSansSemibold
@@ -236,7 +235,7 @@ UnloadBtn.BackgroundColor3, UnloadBtn.Font = Color3.fromRGB(45, 15, 15), Enum.Fo
 UnloadBtn.Text, UnloadBtn.TextColor3, UnloadBtn.TextSize = "Unload Hub Script", Color3.fromRGB(255, 100, 100), 13
 local UnloadStroke = Instance.new("UIStroke", UnloadBtn) UnloadStroke.Color = Color3.fromRGB(150, 0, 0)
 Titanum.UnloadBtnObj = UnloadBtn
--- [[ TITANUM HUB: PART 2.2 - ESP PAGE WITH DROPDOWNS ]] --
+-- [[ TITANUM HUB: PART 3 - ESP PAGE WITH DROPDOWNS & LVL TOGGLE ]] --
 local Titanum = shared.TitanumConfig
 local EspPage = Titanum.MainFrameObj.EspPage
 local TweenService = game:GetService("TweenService")
@@ -257,19 +256,24 @@ PlrToggleBtn.Text = "  esp player  ▼"
 PlrToggleBtn.TextColor3, PlrToggleBtn.TextSize = Color3.fromRGB(255, 255, 255), 13
 
 local PlrNameBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrNameBtn.Size, PlrNameBtn.Position = UDim2.new(1, -16, 0, 24), UDim2.new(0, 8, 0, 38)
+PlrNameBtn.Size, PlrNameBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 35)
 PlrNameBtn.BackgroundColor3, PlrNameBtn.Text = Color3.fromRGB(28, 28, 38), "esp name: OFF"
 PlrNameBtn.TextColor3, PlrNameBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
 local PlrDistBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrDistBtn.Size, PlrDistBtn.Position = UDim2.new(1, -16, 0, 24), UDim2.new(0, 8, 0, 68)
+PlrDistBtn.Size, PlrDistBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 62)
 PlrDistBtn.BackgroundColor3, PlrDistBtn.Text = Color3.fromRGB(28, 28, 38), "esp distance: OFF"
 PlrDistBtn.TextColor3, PlrDistBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
 local PlrOutlineBtn = Instance.new("TextButton", PlrDropdownFrame)
-PlrOutlineBtn.Size, PlrOutlineBtn.Position = UDim2.new(1, -16, 0, 24), UDim2.new(0, 8, 0, 98)
+PlrOutlineBtn.Size, PlrOutlineBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 89)
 PlrOutlineBtn.BackgroundColor3, PlrOutlineBtn.Text = Color3.fromRGB(28, 28, 38), "outline: OFF"
 PlrOutlineBtn.TextColor3, PlrOutlineBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
+
+local PlrLvlBtn = Instance.new("TextButton", PlrDropdownFrame)
+PlrLvlBtn.Size, PlrLvlBtn.Position = UDim2.new(1, -16, 0, 22), UDim2.new(0, 8, 0, 116)
+PlrLvlBtn.BackgroundColor3, PlrLvlBtn.Text = Color3.fromRGB(28, 28, 38), "esp level: OFF"
+PlrLvlBtn.TextColor3, PlrLvlBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
 local isFruitOpen = false
 local FruitDropdownFrame = Instance.new("Frame", EspPage)
@@ -304,29 +308,33 @@ FruitDespawnBtn.Size, FruitDespawnBtn.Position = UDim2.new(1, -16, 0, 24), UDim2
 FruitDespawnBtn.BackgroundColor3, FruitDespawnBtn.Text = Color3.fromRGB(28, 28, 38), "despawn notification: OFF"
 FruitDespawnBtn.TextColor3, FruitDespawnBtn.TextSize = Color3.fromRGB(240, 240, 240), 12
 
+local isPlrOpenLocal = false
 local function collapseEspLayout()
-    if isPlrOpen then
-        TweenService:Create(PlrDropdownFrame, tInfo, {Size = UDim2.new(1, -20, 0, 132)}):Play()
-        TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, 152)}):Play()
+    local pFrame = Titanum.PlrDropdownFrameObj
+    if isPlrOpenLocal then
+        TweenService:Create(pFrame, tInfo, {Size = UDim2.new(1, -20, 0, 146)}):Play()
+        TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, 166)}):Play()
     else
-        TweenService:Create(PlrDropdownFrame, tInfo, {Size = UDim2.new(1, -20, 0, 30)}):Play()
+        TweenService:Create(pFrame, tInfo, {Size = UDim2.new(1, -20, 0, 30)}):Play()
         TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, 50)}):Play()
     end
     if isFruitOpen then
-        local targetY = isPlrOpen and 152 or 50
+        local targetY = isPlrOpenLocal and 166 or 50
         TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, targetY), Size = UDim2.new(1, -20, 0, 162)}):Play()
     else
-        local targetY = isPlrOpen and 152 or 50
+        local targetY = isPlrOpenLocal and 166 or 50
         TweenService:Create(FruitDropdownFrame, tInfo, {Position = UDim2.new(0, 10, 0, targetY), Size = UDim2.new(1, -20, 0, 30)}):Play()
     end
 end
 
-PlrToggleBtn.MouseButton1Click:Connect(function() isPlrOpen = not isPlrOpen collapseEspLayout() end)
+PlrToggleBtn.MouseButton1Click:Connect(function() isPlrOpenLocal = not isPlrOpenLocal collapseEspLayout() end)
 FruitToggleBtn.MouseButton1Click:Connect(function() isFruitOpen = not isFruitOpen collapseEspLayout() end)
 
 PlrNameBtn.MouseButton1Click:Connect(function() Titanum.espPlrName = not Titanum.espPlrName if Titanum.espPlrName then PlrNameBtn.Text = "esp name: ON" else PlrNameBtn.Text = "esp name: OFF" end end)
 PlrDistBtn.MouseButton1Click:Connect(function() Titanum.espPlrDist = not Titanum.espPlrDist if Titanum.espPlrDist then PlrDistBtn.Text = "esp distance: ON" else PlrDistBtn.Text = "esp distance: OFF" end end)
 PlrOutlineBtn.MouseButton1Click:Connect(function() Titanum.espPlrOutline = not Titanum.espPlrOutline if Titanum.espPlrOutline then PlrOutlineBtn.Text = "outline: ON" else PlrOutlineBtn.Text = "outline: OFF" end end)
+PlrLvlBtn.MouseButton1Click:Connect(function() Titanum.espPlrLvl = not Titanum.espPlrLvl if Titanum.espPlrLvl then PlrLvlBtn.Text = "esp level: ON" else PlrLvlBtn.Text = "esp level: OFF" end end)
+
 FruitNameBtn.MouseButton1Click:Connect(function() Titanum.espFruitName = not Titanum.espFruitName if Titanum.espFruitName then FruitNameBtn.Text = "esp name: ON" else FruitNameBtn.Text = "esp name: OFF" end end)
 FruitDistBtn.MouseButton1Click:Connect(function() Titanum.espFruitDist = not Titanum.espFruitDist if Titanum.espFruitDist then FruitDistBtn.Text = "esp distance: ON" else FruitDistBtn.Text = "esp distance: OFF" end end)
 
@@ -339,7 +347,8 @@ FruitDespawnBtn.MouseButton1Click:Connect(function()
     Titanum.espFruitDespawn = not Titanum.espFruitDespawn
     if Titanum.espFruitDespawn then FruitDespawnBtn.Text = "despawn notification: ON" else FruitDespawnBtn.Text = "despawn notification: OFF" end
 end)
--- [[ TITANUM HUB: PART 4.1 - PHYSIC CORES & INPUT ENGINE FIX ]] --
+Titanum.PlrToggleBtnObj = PlrToggleBtn
+-- [[ TITANUM HUB: PART 4.1 - PHYSIC ENGINE & KEYBINDS CORES ]] --
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -512,7 +521,7 @@ Titanum.espConn = RunService.RenderStepped:Connect(function()
                 if highlight then highlight:Destroy() end
             end
             local billboard = head and head:FindFirstChild("TitanumESP")
-            if head and (Titanum.espPlrName or Titanum.espPlrDist) then
+            if head and (Titanum.espPlrName or Titanum.espPlrDist or Titanum.espPlrLvl) then
                 if not billboard then
                     billboard = Instance.new("BillboardGui", head)
                     billboard.Name, billboard.AlwaysOnTop, billboard.Size = "TitanumESP", true, UDim2.new(0, 200, 0, 50)
@@ -521,9 +530,12 @@ Titanum.espConn = RunService.RenderStepped:Connect(function()
                     textLabel.Size, textLabel.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
                     textLabel.TextColor3, textLabel.Font, textLabel.TextSize = Color3.fromRGB(255, 255, 255), Enum.Font.SourceSansBold, 14
                 end
+                
+                local lvlVal = v:FindFirstChild("DataFolder") and v.DataFolder:FindFirstChild("Level") and v.DataFolder.Level.Value or v:FindFirstChild("leaderstats") and v.leaderstats:FindFirstChild("Level") and v.leaderstats.Level.Value or "???"
                 local dist = math.round((v.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
                 local textStr = ""
                 if Titanum.espPlrName then textStr = textStr .. v.Name .. " " end
+                if Titanum.espPlrLvl then textStr = textStr .. "[Lvl " .. tostring(lvlVal) ..] " end
                 if Titanum.espPlrDist then textStr = textStr .. "[" .. tostring(dist) .. "m]" end
                 billboard.TextLabel.Text = textStr
             else
@@ -605,6 +617,6 @@ end
 Titanum.UnloadBtnObj.MouseButton1Click:Connect(masterUnload)
 Titanum.SpeedBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isSpeed then Titanum.disableSpeedFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Speedhack: DISABLED", Duration = 1.5}) end) else Titanum.enableSpeedFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Speedhack: ENABLED", Duration = 1.5}) end) end end)
 Titanum.JumpBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isJump then Titanum.disableJumpFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Super Jump: DISABLED", Duration = 1.5}) end) else Titanum.enableJumpFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Super Jump: ENABLED", Duration = 1.5}) end) end end)
-Titanum.NoclipBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isNoclip then Titanum.disableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: ВЫКЛЮЧЕН", Duration = 1.5}) end) else Titanum.enableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: ВКЛЮЧЕН", Duration = 1.5}) end) end end)
+Titanum.NoclipBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end if Titanum.isNoclip then Titanum.disableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: DISABLED", Duration = 1.5}) end) else Titanum.enableNoclipFunc() pcall(function() StarterGui:SetCore("SendNotification", {Title = "titanum hub", Text = "Noclip: ENABLED", Duration = 1.5}) end) end end)
 Titanum.BindBtnObj.MouseButton1Click:Connect(function() if Titanum.isUnloaded then return end Titanum.isBinding = true Titanum.BindBtnObj.Text, Titanum.BindStrokeObj.Color = "Press any key...", Color3.fromRGB(255, 255, 0) end)
 player.CharacterAdding:Connect(function() Titanum.disableSpeedFunc() Titanum.disableJumpFunc() Titanum.disableNoclipFunc() end)
